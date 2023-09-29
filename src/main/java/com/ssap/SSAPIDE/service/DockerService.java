@@ -62,6 +62,13 @@ public class DockerService {
         return containerId;
     }
 
+    public void deleteContainer(String containerId) {
+        // Docker 컨테이너 중지
+        dockerClient.stopContainerCmd(containerId).exec();
+        // Docker 컨테이너 삭제
+        dockerClient.removeContainerCmd(containerId).exec();
+    }
+
     public void runContainer(String containerId) {
         // 컨테이너 실행
         dockerClient.startContainerCmd(containerId).exec();
