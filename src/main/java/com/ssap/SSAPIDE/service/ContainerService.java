@@ -4,13 +4,9 @@ import com.ssap.SSAPIDE.dto.ContainerResponseDto;
 import com.ssap.SSAPIDE.model.Container;
 import com.ssap.SSAPIDE.repository.ContainerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
