@@ -46,6 +46,10 @@ public class ContainerService {
         }
     }
 
+    public void deleteContainer(String containerId) {
+         dockerService.deleteContainer(containerId);
+    }
+
     public void runContainer(String containerId) {
         dockerService.runContainer(containerId);
     }
