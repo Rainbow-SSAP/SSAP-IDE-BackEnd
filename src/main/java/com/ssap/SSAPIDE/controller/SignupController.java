@@ -1,15 +1,17 @@
 package com.ssap.SSAPIDE.controller;
 
-import com.ssap.SSAPIDE.dto.EmailAvailability;
-import com.ssap.SSAPIDE.dto.ResponseDto;
-import com.ssap.SSAPIDE.dto.SignupRequest;
-import com.ssap.SSAPIDE.dto.SignupResponse;
+import com.ssap.SSAPIDE.dto.*;
 import com.ssap.SSAPIDE.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -25,13 +27,6 @@ public class SignupController {
         log.error("", e);
         ResponseDto<String> responseDto = new ResponseDto<String>("", "");
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ResponseDto<String> exHandler(Exception e) {
-        log.error("", e);
-        return new ResponseDto<String>("요청을 처리하는 중에 서버에서 오류가 발생했습니다.", "");
     }
 
     @GetMapping("/users/check-email/{email}")
@@ -50,9 +45,15 @@ public class SignupController {
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signup(
-            @RequestBody SignupRequest request
+            @Validated @RequestBody SignupRequest request, BindingResult bindingResult
     ) {
-        //TODO: 입력값 검증 로직 필요(400번 오류 관련).
+        if(bindingResult.hasErrors()) {
+            List<ErrorField> errors = bindingResult.getFieldErrors().stream()
+                    .map(error -> new ErrorField(error.getField()))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.badRequest().body(ResponseDto.error("입력 값 검증 오류", errors));
+        }
 
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ResponseDto.error("비밀번호가 일치하지 않습니다.", ""));
