@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice(basePackages = "com.ssap.SSAPIDE.controller")
+@RestControllerAdvice//(basePackages = "com.ssap.SSAPIDE.controller")
 public class ExceptionController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

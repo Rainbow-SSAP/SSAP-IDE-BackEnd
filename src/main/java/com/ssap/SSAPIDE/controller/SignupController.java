@@ -1,7 +1,9 @@
 package com.ssap.SSAPIDE.controller;
 
+import com.ssap.SSAPIDE.domain.member.User;
 import com.ssap.SSAPIDE.dto.*;
 import com.ssap.SSAPIDE.service.EmailService;
+import com.ssap.SSAPIDE.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class SignupController {
 
     private final EmailService emailService;
+    private final UserService userService;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
@@ -60,13 +63,16 @@ public class SignupController {
         }
 
         try {
-            //TODO:
-            // DB 저장할 때 복호화 못하게 해야 함.
-            // MySQL DB 연동테스트 필요.
+            User newUser = userService.signup(request);
+            if (newUser.getEmail().equals(null)) {
+                EmailAvailability emailAvailability = new EmailAvailability();
+                emailAvailability.setIsAvailable(false);
+                return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.error("이메일이 이미 사용 중입니다.", emailAvailability));
+            }
 
             SignupResponse response = new SignupResponse();
-            response.setEmail(request.getEmail());
-            response.setName(request.getName());
+            response.setEmail(newUser.getEmail());
+            response.setName(newUser.getName());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("회원가입 성공", response));
         } catch (Exception e) {
