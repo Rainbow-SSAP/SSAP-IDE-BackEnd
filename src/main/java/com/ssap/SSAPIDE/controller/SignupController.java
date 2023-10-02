@@ -3,7 +3,7 @@ package com.ssap.SSAPIDE.controller;
 import com.ssap.SSAPIDE.domain.member.User;
 import com.ssap.SSAPIDE.dto.*;
 import com.ssap.SSAPIDE.service.EmailService;
-import com.ssap.SSAPIDE.service.UserService;
+import com.ssap.SSAPIDE.service.SignupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class SignupController {
 
     private final EmailService emailService;
-    private final UserService userService;
+    private final SignupService signupService;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
@@ -64,7 +64,7 @@ public class SignupController {
         }
 
         try {
-            User newUser = userService.signup(request);
+            User newUser = signupService.signup(request);
             Optional<User> optionalNewUser = Optional.ofNullable(newUser);
             if (!optionalNewUser.isPresent()) {
                 EmailAvailability emailAvailability = new EmailAvailability();
