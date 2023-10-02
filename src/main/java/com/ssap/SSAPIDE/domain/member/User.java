@@ -22,10 +22,10 @@ public class User {
     private String email;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String password;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private String name;
 }
