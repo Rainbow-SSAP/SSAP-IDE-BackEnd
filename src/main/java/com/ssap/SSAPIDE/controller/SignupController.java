@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -64,7 +65,8 @@ public class SignupController {
 
         try {
             User newUser = userService.signup(request);
-            if (newUser.getEmail().equals(null)) {
+            Optional<User> optionalNewUser = Optional.ofNullable(newUser);
+            if (!optionalNewUser.isPresent()) {
                 EmailAvailability emailAvailability = new EmailAvailability();
                 emailAvailability.setIsAvailable(false);
                 return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.error("이메일이 이미 사용 중입니다.", emailAvailability));

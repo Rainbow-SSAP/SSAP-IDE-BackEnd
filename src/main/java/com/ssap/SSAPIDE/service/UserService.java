@@ -16,7 +16,7 @@ public class UserService {
 
     public User signup(SignupRequest signupRequest) {
         if(userRepository.existsByEmail(signupRequest.getEmail())) {
-            return new User();
+            return null;
         }
 
         User user = new User();
