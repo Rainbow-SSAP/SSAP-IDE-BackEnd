@@ -26,7 +26,7 @@ public class LogInterceptor implements HandlerInterceptor {
         }
         log.info("Request [{}][{}][{}]", uuid, requestURI, handler);
 
-        return true;
+        return false;
     }
 
     @Override
