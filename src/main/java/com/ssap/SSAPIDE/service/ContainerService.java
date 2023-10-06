@@ -16,7 +16,7 @@ public class ContainerService {
 
     public ContainerResponseDto createContainer(String title, String description, String stack, String customControl) throws InterruptedException {
         try {
-            dockerService.pullImage(stack);
+//            dockerService.pullImage(stack);
             String containerId = dockerService.createContainer(title, stack);
 
             // 현재 시간을 생성 시간으로 설정합니다.
@@ -48,6 +48,8 @@ public class ContainerService {
 
     public void deleteContainer(String containerId) {
          dockerService.deleteContainer(containerId);
+        // DB에서 해당 컨테이너 삭제
+         containerRepository.deleteById(containerId);
     }
 
     public void runContainer(String containerId) {

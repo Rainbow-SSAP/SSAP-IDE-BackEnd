@@ -3,6 +3,7 @@ package com.ssap.SSAPIDE.controller;
 import com.ssap.SSAPIDE.dto.ContainerRequestDto;
 import com.ssap.SSAPIDE.dto.ContainerResponseDto;
 import com.ssap.SSAPIDE.service.ContainerService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
     private ContainerService containerService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createContainer(@RequestBody ContainerRequestDto requestDto) {
+    public ResponseEntity<?> createContainer(@Valid @RequestBody ContainerRequestDto requestDto) {
         try {
             ContainerResponseDto container = containerService.createContainer(
                     requestDto.getTitle(),
