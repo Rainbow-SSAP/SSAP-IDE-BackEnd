@@ -37,4 +37,21 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseDto.error("이메일 또는 비밀번호를 다시 확인해주세요.", ""));
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.invalidate();
+        }
+        return ResponseEntity.ok(ResponseDto.success("로그아웃 성공.", ""));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ResponseDto> logout(@SessionAttribute(name = SessionLoginConst.LOGIN_USER, required = false) User loginUser) {
+        if (loginUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseDto.error("로그아웃 홈 이동", ""));
+        }
+        return ResponseEntity.ok(ResponseDto.success("로그인 홈 이동", ""));
+    }
 }
