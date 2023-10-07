@@ -50,4 +50,24 @@ public class FolderController {
     }
 
     // 추가적인 폴더 관련 API 메서드들 (예: 수정, 삭제 등)을 여기에 구현
+    @DeleteMapping("/{folderId}")
+    public ResponseEntity<?> deleteFolder(@PathVariable String containerId, @PathVariable Long folderId) {
+        try {
+            fileAndFolderService.deleteFolder(containerId, folderId);
+
+            return ResponseEntity.ok().body(Map.of("status", 200, "message", "폴더 삭제 완료"));
+        } catch (IllegalArgumentException e) {
+            log.error("Error due to illegal argument: {}", e.getMessage());
+            return ResponseEntity.status(400).body(Map.of("status", 400, "message", e.getMessage()));
+        } catch (SecurityException e) {
+            log.error("Error due to security constraints: {}", e.getMessage());
+            return ResponseEntity.status(403).body(Map.of("status", 403, "message", "해당 폴더를 삭제할 권한이 없습니다."));
+        } catch (NoSuchElementException e) {
+            log.error("Error due to non-existent element: {}", e.getMessage());
+            return ResponseEntity.status(404).body(Map.of("status", 404, "message", "지정된 경로에 해당하는 폴더가 존재하지 않습니다."));
+        } catch (Exception e) {
+            log.error("Error while deleting folder: {}", e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("status", 500, "message", "요청을 처리하는 중에 서버에서 오류가 발생했습니다."));
+        }
+    }
 }

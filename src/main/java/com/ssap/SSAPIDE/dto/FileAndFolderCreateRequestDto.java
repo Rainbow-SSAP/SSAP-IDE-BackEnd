@@ -1,19 +1,19 @@
 package com.ssap.SSAPIDE.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class FileAndFolderCreateRequestDto {
-    @NotBlank
     private String containerId;
-    @NotBlank
+    @NotNull
     private Long parentFolderId;
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private Boolean type;
 
     // 파일인 경우에만 사용
