@@ -55,4 +55,9 @@ public class ContainerService {
     public void runContainer(String containerId) {
         dockerService.runContainer(containerId);
     }
+
+    public Container getContainerById(String containerId) {
+        return containerRepository.findById(containerId)
+                .orElseThrow(() -> new IllegalArgumentException("Container not found for id: " + containerId));
+    }
 }
