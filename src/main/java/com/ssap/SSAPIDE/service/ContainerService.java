@@ -1,12 +1,16 @@
 package com.ssap.SSAPIDE.service;
 
+import com.ssap.SSAPIDE.dto.ContainerDetailsResponseDto;
 import com.ssap.SSAPIDE.dto.ContainerResponseDto;
+import com.ssap.SSAPIDE.dto.ContainerUpdateRequestDto;
 import com.ssap.SSAPIDE.model.Container;
 import com.ssap.SSAPIDE.repository.ContainerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +20,7 @@ public class ContainerService {
 
     public ContainerResponseDto createContainer(String title, String description, String stack, String customControl) throws InterruptedException {
         try {
-            dockerService.pullImage(stack);
+//            dockerService.pullImage(stack);
             String containerId = dockerService.createContainer(title, stack);
 
             // 현재 시간을 생성 시간으로 설정합니다.
@@ -46,11 +50,41 @@ public class ContainerService {
         }
     }
 
+
+    public void updateContainer(ContainerUpdateRequestDto dto) {
+        Optional<Container> optionalContainer = containerRepository.findById(dto.getContainerId());
+        if (optionalContainer.isPresent()) {
+            Container existingContainer = optionalContainer.get();
+            if (dto.getDescription() != null) { // 수정하려는 description 값이 전송되었는지 확인
+                existingContainer.setDescription(dto.getDescription());
+            }
+            containerRepository.save(existingContainer);
+        } else {
+            throw new NoSuchElementException("지정된 ID에 해당하는 컨테이너가 존재하지 않습니다.");
+        }
+    }
+
     public void deleteContainer(String containerId) {
          dockerService.deleteContainer(containerId);
+        // DB에서 해당 컨테이너 삭제
+         containerRepository.deleteById(containerId);
     }
 
     public void runContainer(String containerId) {
         dockerService.runContainer(containerId);
+    }
+    public ContainerDetailsResponseDto getContainerDetails(String containerId) {
+        Optional<Container> optionalContainer = containerRepository.findById(containerId);
+        if (optionalContainer.isPresent()) {
+            Container container = optionalContainer.get();
+            return new ContainerDetailsResponseDto(container);
+        } else {
+            throw new NoSuchElementException("지정된 ID에 해당하는 컨테이너가 존재하지 않습니다.");
+        }
+    }
+
+    public Container getContainerById(String containerId) {
+        return containerRepository.findById(containerId)
+                .orElseThrow(() -> new IllegalArgumentException("Container not found for id: " + containerId));
     }
 }
