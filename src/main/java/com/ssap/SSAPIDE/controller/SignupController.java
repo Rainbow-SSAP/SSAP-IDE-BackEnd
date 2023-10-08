@@ -34,7 +34,6 @@ public class SignupController {
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
 
-
     @GetMapping("/users/check-email/{email}")
     public ResponseEntity<ResponseDto> checkEmailDuplication(
             @PathVariable String email
