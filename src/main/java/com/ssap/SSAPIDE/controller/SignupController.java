@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*")
 public class SignupController {
 
     private final EmailService emailService;
@@ -28,10 +29,11 @@ public class SignupController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity illegalExHandler(IllegalArgumentException e) {
-        log.error("", e);
-        ResponseDto<String> responseDto = new ResponseDto<String>("", "");
+        log.error("IllegalArgumentException", e);
+        ResponseDto<String> responseDto = new ResponseDto<String>("입력 값 검증 오류", "");
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
+
 
     @GetMapping("/users/check-email/{email}")
     public ResponseEntity<ResponseDto> checkEmailDuplication(
