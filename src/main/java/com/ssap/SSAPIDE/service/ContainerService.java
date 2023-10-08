@@ -1,5 +1,6 @@
 package com.ssap.SSAPIDE.service;
 
+import com.ssap.SSAPIDE.dto.ContainerDetailsResponseDto;
 import com.ssap.SSAPIDE.dto.ContainerResponseDto;
 import com.ssap.SSAPIDE.dto.ContainerUpdateRequestDto;
 import com.ssap.SSAPIDE.model.Container;
@@ -71,6 +72,15 @@ public class ContainerService {
 
     public void runContainer(String containerId) {
         dockerService.runContainer(containerId);
+    }
+    public ContainerDetailsResponseDto getContainerDetails(String containerId) {
+        Optional<Container> optionalContainer = containerRepository.findById(containerId);
+        if (optionalContainer.isPresent()) {
+            Container container = optionalContainer.get();
+            return new ContainerDetailsResponseDto(container);
+        } else {
+            throw new NoSuchElementException("지정된 ID에 해당하는 컨테이너가 존재하지 않습니다.");
+        }
     }
 
     public Container getContainerById(String containerId) {
