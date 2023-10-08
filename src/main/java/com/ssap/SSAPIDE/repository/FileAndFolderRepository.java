@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FileAndFolderRepository extends JpaRepository<FileAndFolder, Long> {
+    boolean existsByNameAndPath(String name, String path);
 }
