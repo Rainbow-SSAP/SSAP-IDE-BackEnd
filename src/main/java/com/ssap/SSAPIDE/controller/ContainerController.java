@@ -8,6 +8,7 @@ import com.ssap.SSAPIDE.service.ContainerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class ContainerController {
                     requestDto.getStack(),
                     requestDto.getCustomControl());
             log.info("Container created with ID: {}", container.getContainerId());
-            return ResponseEntity.ok().body(
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     new ContainerResponseDto(container.getContainerId(), container.getCreatedAt()));
         } catch (Exception e) {
             log.error("Error while creating container", e);
