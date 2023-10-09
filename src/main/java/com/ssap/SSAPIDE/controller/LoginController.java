@@ -6,6 +6,7 @@ import com.ssap.SSAPIDE.dto.ResponseDto;
 import com.ssap.SSAPIDE.service.LoginService;
 import com.ssap.SSAPIDE.session.SessionLoginConst;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +24,18 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @GetMapping("/login")
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity illegalExHandler(IllegalArgumentException e) {
+        log.error("IllegalArgumentException", e);
+        ResponseDto<String> responseDto = new ResponseDto<String>("입력 값 검증 오류", "");
+        return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<ResponseDto> login(
             @Validated @RequestBody LoginRequest loginRequest,
-            HttpServletRequest request
+            HttpServletRequest request, HttpServletResponse response
             ) {
         User loginUser = loginService.login(loginRequest);
         if (loginUser != null) {

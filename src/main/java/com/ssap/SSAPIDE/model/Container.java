@@ -30,5 +30,4 @@ public class Container {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private User user;
-
 }

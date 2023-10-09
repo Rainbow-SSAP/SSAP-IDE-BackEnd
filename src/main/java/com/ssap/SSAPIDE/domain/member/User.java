@@ -1,8 +1,11 @@
 package com.ssap.SSAPIDE.domain.member;
 
+import com.ssap.SSAPIDE.model.Container;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +31,7 @@ public class User {
     @NotBlank
     @Column(nullable = false, length = 30)
     private String name;
+
+    @OneToMany(mappedBy = "user")
+    private List<Container> containers;
 }
