@@ -1,8 +1,7 @@
 package com.ssap.SSAPIDE.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.ssap.SSAPIDE.domain.member.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +26,8 @@ public class Container {
 
     @OneToMany(mappedBy = "container")
     private List<FileAndFolder> filesAndFolders;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private User user;
 }

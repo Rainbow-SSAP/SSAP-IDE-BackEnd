@@ -1,5 +1,6 @@
 package com.ssap.SSAPIDE.service;
 
+import com.ssap.SSAPIDE.domain.member.User;
 import com.ssap.SSAPIDE.dto.ContainerDetailsResponseDto;
 import com.ssap.SSAPIDE.dto.ContainerResponseDto;
 import com.ssap.SSAPIDE.dto.ContainerUpdateRequestDto;
@@ -7,6 +8,7 @@ import com.ssap.SSAPIDE.model.Container;
 import com.ssap.SSAPIDE.repository.ContainerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -18,7 +20,8 @@ public class ContainerService {
     private final ContainerRepository containerRepository;
     private final DockerService dockerService;
 
-    public ContainerResponseDto createContainer(String title, String description, String stack, String customControl) throws InterruptedException {
+    @Transactional
+    public ContainerResponseDto createContainer(String title, String description, String stack, String customControl, User user) throws InterruptedException {
         try {
 //            dockerService.pullImage(stack);
             String containerId = dockerService.createContainer(title, stack);
@@ -34,6 +37,7 @@ public class ContainerService {
             container.setStack(stack);
             container.setCustomControl(customControl);
             container.setCreatedAt(createdAt);
+            container.setUser(user);
 
             // 컨테이너 객체를 데이터베이스에 저장합니다.
             containerRepository.save(container);
