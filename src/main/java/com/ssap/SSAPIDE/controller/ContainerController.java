@@ -28,15 +28,14 @@ public class ContainerController {
     public ResponseEntity<?> createContainer(
             @Valid @RequestBody ContainerRequestDto requestDto,
             @SessionAttribute(name = SessionLoginConst.LOGIN_USER, required = false) User loginUser
-            ) {
+    ) {
         try {
             ContainerResponseDto container = containerService.createContainer(
                     requestDto.getTitle(),
                     requestDto.getDescription(),
                     requestDto.getStack(),
                     requestDto.getCustomControl(),
-                    loginUser
-            );
+                    loginUser);
             log.info("Container created with ID: {}", container.getContainerId());
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     new ContainerResponseDto(container.getContainerId(), container.getCreatedAt()));

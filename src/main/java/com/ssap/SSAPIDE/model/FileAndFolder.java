@@ -24,6 +24,7 @@ public class FileAndFolder {
     private Long parentFolderId; // 부모 폴더Id
     private String name;  // 폴더 또는 파일명
     private Boolean type; // true: 파일, false: 폴더
+    private String ext;
     private String content; // 파일 내용
     private LocalDateTime lastModified; // 수정 시간
     private String path; // 파일 또는 폴더의 경로
