@@ -26,7 +26,7 @@ public class FileAndFolderService {
         fileAndFolder.setParentFolderId(dto.getParentFolderId());
         fileAndFolder.setName(dto.getName());
         fileAndFolder.setType(dto.getType());
-        
+
         if (dto.getType()) { // 파일인 경우
             fileAndFolder.setContent(dto.getContent());
             fileAndFolder.setExt(dto.getExt());
@@ -70,4 +70,18 @@ public class FileAndFolderService {
             throw new NoSuchElementException("지정된 경로에 해당하는 폴더가 존재하지 않습니다.");
         }
     }
+
+    public void deleteFile(String containerId, Long folderId) {
+        Optional<FileAndFolder> optionalFolder = fileAndFolderRepository.findById(folderId);
+        if (optionalFolder.isPresent()) {
+            FileAndFolder folderToDelete = optionalFolder.get();
+            if (!folderToDelete.getContainer().getContainerId().equals(containerId)) {
+                throw new SecurityException("해당 파일를 삭제할 권한이 없습니다.");
+            }
+            fileAndFolderRepository.delete(folderToDelete);
+        } else {
+            throw new NoSuchElementException("지정된 경로에 해당하는 파일이 존재하지 않습니다.");
+        }
+    }
+
 }

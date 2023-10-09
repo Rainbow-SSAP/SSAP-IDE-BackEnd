@@ -1,6 +1,7 @@
 package com.ssap.SSAPIDE.controller;
 
 import com.ssap.SSAPIDE.dto.FileAndFolderCreateRequestDto;
+import com.ssap.SSAPIDE.dto.FileRenameRequestDto;
 import com.ssap.SSAPIDE.service.FileAndFolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,27 @@ public class FileController {
             } else {
                 return ResponseEntity.status(500).body(Map.of("status", 500, "message", "요청을 처리하는 중에 서버에서 오류가 발생했습니다."));
             }
+        }
+    }
+
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<Map<String, String>> deleteFile(@PathVariable String containerId, @PathVariable Long fileId) {
+        try {
+            fileAndFolderService.deleteFile(containerId, fileId);
+
+            return ResponseEntity.ok(Map.of("message", "파일 삭제 완료"));
+        } catch (IllegalArgumentException e) {
+            log.error("Error due to illegal argument: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "파라미터 필수 항목이 누락되었거나 형식이 잘못되었습니다."));
+        } catch (SecurityException e) {
+            log.error("Error due to security constraints: {}", e.getMessage());
+            return ResponseEntity.status(403).body(Map.of("message", "해당 파일을 삭제할 권한이 없습니다."));
+        } catch (NoSuchElementException e) {
+            log.error("Error due to non-existent element: {}", e.getMessage());
+            return ResponseEntity.status(404).body(Map.of("message", "지정된 경로에 해당하는 파일이 존재하지 않습니다."));
+        } catch (Exception e) {
+            log.error("Error while deleting file: {}", e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("message", "요청을 처리하는 중에 서버에서 오류가 발생했습니다."));
         }
     }
 }
