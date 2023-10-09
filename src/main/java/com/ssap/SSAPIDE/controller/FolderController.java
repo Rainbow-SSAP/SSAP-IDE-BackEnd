@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/ide/{containerId}/folders")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class FolderController {
 
     private final FileAndFolderService fileAndFolderService;

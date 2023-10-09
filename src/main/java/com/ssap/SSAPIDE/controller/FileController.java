@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/ide/{containerId}/files")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class FileController {
 
     private final FileAndFolderService fileAndFolderService;
