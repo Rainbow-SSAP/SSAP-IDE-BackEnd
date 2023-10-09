@@ -26,7 +26,12 @@ public class FileAndFolderService {
         fileAndFolder.setParentFolderId(dto.getParentFolderId());
         fileAndFolder.setName(dto.getName());
         fileAndFolder.setType(dto.getType());
-        fileAndFolder.setContent(dto.getContent());
+        
+        if (dto.getType()) { // 파일인 경우
+            fileAndFolder.setContent(dto.getContent());
+            fileAndFolder.setExt(dto.getExt());
+        }
+
         fileAndFolder.setLastModified(LocalDateTime.now());
         fileAndFolder.setPath(dto.getPath());
 
