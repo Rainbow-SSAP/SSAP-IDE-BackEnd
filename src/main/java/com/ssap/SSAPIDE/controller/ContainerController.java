@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RestController
 @RequestMapping("/containers")
+@CrossOrigin(origins = "*")
 public class ContainerController {
     @Autowired
     private ContainerService containerService;
