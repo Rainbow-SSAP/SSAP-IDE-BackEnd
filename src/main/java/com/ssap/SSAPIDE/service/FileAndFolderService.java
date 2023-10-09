@@ -84,4 +84,22 @@ public class FileAndFolderService {
         }
     }
 
+    public void renameFile(String containerId, Long folderId, String newFolderName) {
+        Optional<FileAndFolder> optionalFolder = fileAndFolderRepository.findById(folderId);
+        if (optionalFolder.isPresent()) {
+            FileAndFolder folderToRename = optionalFolder.get();
+            if (!folderToRename.getContainer().getContainerId().equals(containerId)) {
+                throw new SecurityException("동일한 이름의 파일이 이미 해당 경로에 존재합니다.");
+            }
+
+            if (fileAndFolderRepository.existsByNameAndPath(newFolderName, folderToRename.getPath())) {
+                throw new SecurityException("동일한 이름의 파일이 이미 해당 경로에 존재합니다.");
+            }
+
+            folderToRename.setName(newFolderName);
+            fileAndFolderRepository.save(folderToRename);
+        } else {
+            throw new NoSuchElementException("지정된 경로에 해당하는 파일이 존재하지 않습니다.");
+        }
+    }
 }

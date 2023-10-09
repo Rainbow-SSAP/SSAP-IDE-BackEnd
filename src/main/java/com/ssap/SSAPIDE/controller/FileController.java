@@ -69,4 +69,35 @@ public class FileController {
             return ResponseEntity.status(500).body(Map.of("message", "요청을 처리하는 중에 서버에서 오류가 발생했습니다."));
         }
     }
+
+    @PatchMapping("/{fileId}/rename")
+    public ResponseEntity<?> renameFile(@PathVariable String containerId,
+                                        @PathVariable Long fileId,
+                                        @RequestBody FileRenameRequestDto requestDto) {
+        try {
+            if (requestDto.getNewFileName() == null || requestDto.getNewFileName().isBlank()) {
+                throw new IllegalArgumentException("파라미터 필수 항목이 누락되었거나 형식이 잘못되었습니다.");
+            }
+            fileAndFolderService.renameFile(containerId, fileId, requestDto.getNewFileName()); // 이름 변경
+
+            return ResponseEntity.ok().body(Map.of("message", "파일명 수정 완료"));
+        } catch (IllegalArgumentException e) {
+            log.error("Error due to illegal argument: {}", e.getMessage());
+            return ResponseEntity.status(400).body(Map.of("status", 400, "message", e.getMessage()));
+        } catch (SecurityException e) {
+            log.error("Error due to security constraints: {}", e.getMessage());
+            if (e.getMessage().contains("동일한 이름의 폴더가 이미 해당 경로에 존재합니다.")) {
+                return ResponseEntity.status(409).body(Map.of("status", 409, "message", "파일 이름이 이미 존재하는 다른 파일과 충돌합니다."));
+            } else {
+                return ResponseEntity.status(400).body(Map.of("status", 400, "message", "파일명에 사용할 수 없는 문자나 문자열이 포함되어 있습니다."));
+            }
+        } catch (NoSuchElementException e) {
+            log.error("Error due to non-existent element: {}", e.getMessage());
+            return ResponseEntity.status(404).body(Map.of("status", 404, "message", "지정된 경로 또는 해당하는 파일이 존재하지 않습니다."));
+        } catch (Exception e) {
+            log.error("Error while renaming file: {}", e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("status", 500, "message", "요청을 처리하는 중에 서버에서 오류가 발생했습니다."));
+        }
+    }
+
 }
